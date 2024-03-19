@@ -19,6 +19,12 @@ public class CommandRunner {
     private int MAX_RECURSION_LEVEL = 10;
     private int recursionLevel = 0;
 
+    /**
+     * Creates a new CommandRunner.
+     *
+     * @param console        the console
+     * @param commandManager the command manager
+     */
     public CommandRunner(Console console, CommandManager commandManager) {
         this.console = console;
         this.commandManager = commandManager;

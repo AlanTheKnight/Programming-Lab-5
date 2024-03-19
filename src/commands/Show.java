@@ -13,7 +13,7 @@ import utils.Console;
 public class Show extends ConsoleCollectionCommand {
 
     /**
-     * Constructor for the command.
+     *  Create a new Show command.
      *
      * @param console           console
      * @param collectionManager collection manager
@@ -23,6 +23,14 @@ public class Show extends ConsoleCollectionCommand {
                 console, collectionManager);
     }
 
+    /**
+     * Create a new Show command with the given name and description.
+     *
+     * @param console           console
+     * @param collectionManager collection manager
+     * @param name              name of the command
+     * @param description       description of the command
+     */
     public Show(Console console, CollectionManager collectionManager, String name, String description) {
         super(name, description, name, console, collectionManager);
     }

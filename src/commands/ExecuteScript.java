@@ -9,6 +9,9 @@ package commands;
  * @author AlanTheKnight
  */
 public class ExecuteScript extends Command {
+    /**
+     * Constructor for the command.
+     */
     public ExecuteScript() {
         super("execute_script", "Считать и исполнить скрипт из указанного файла", "execute_script <filename>");
     }

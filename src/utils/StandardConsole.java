@@ -33,7 +33,7 @@ public class StandardConsole implements Console {
 
     @Override
     public void printError(Object obj) {
-        System.err.println(ConsoleColors.colorize("Error: ", ConsoleColors.RED) + obj);
+        System.out.println(ConsoleColors.colorize("Error: "  + obj, ConsoleColors.RED));
     }
 
     @Override

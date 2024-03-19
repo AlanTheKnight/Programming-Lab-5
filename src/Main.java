@@ -4,7 +4,15 @@ import managers.CommandManager;
 import managers.DumpManager;
 import utils.StandardConsole;
 
+/**
+ * Main class.
+ */
 public class Main {
+    /**
+     * Main method.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         var console = new StandardConsole();
 
@@ -15,7 +23,13 @@ public class Main {
 
         var dumpManager = new DumpManager(args[0], console);
         var collectionManager = new CollectionManager(dumpManager);
-        collectionManager.loadCollection();
+        try {
+            collectionManager.loadCollection();
+        } catch (IllegalArgumentException | DumpManager.DocumentReadException e) {
+            console.printError("Не удалось загрузить коллекцию из файла.");
+            console.printError(e.getMessage());
+            return;
+        }
 
         var commandManager = new CommandManager() {
             {

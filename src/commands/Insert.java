@@ -26,12 +26,8 @@ public class Insert extends ConsoleCollectionCommand {
 
     @Override
     public boolean execute(String[] arguments) {
-        int id;
-
-        try {
-            id = Integer.parseInt(arguments[1]);
-        } catch (NumberFormatException e) {
-            printArgsError(console);
+        Integer id = readIdArg(arguments[1], console);
+        if (id == null) {
             return false;
         }
 

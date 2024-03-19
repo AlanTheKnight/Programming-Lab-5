@@ -17,6 +17,7 @@ public class CommandManager {
 
     /**
      * Register a command.
+     * @param command the command to register
      */
     public void register(Command command) {
         commands.put(command.getName(), command);
@@ -24,6 +25,7 @@ public class CommandManager {
 
     /**
      * Get commands map.
+     * @return the commands map
      */
     public Map<String, Command> getCommands() {
         return commands;
@@ -31,6 +33,7 @@ public class CommandManager {
 
     /**
      * Get history list.
+     * @return the history list
      */
     public ArrayList<String> getHistory() {
         return history;
@@ -38,6 +41,7 @@ public class CommandManager {
 
     /**
      * Add command to history.
+     * @param command the command to add
      */
     public void addToHistory(String command) {
         history.add(command);
@@ -45,6 +49,9 @@ public class CommandManager {
 
     /**
      * Get command by its name
+     *
+     * @param name the name of the command
+     * @return the command
      */
     public Command getCommand(String name) {
         return commands.get(name);

@@ -1,6 +1,7 @@
 package commands;
 
 import managers.CollectionManager;
+import managers.DumpManager;
 import utils.Console;
 
 /**
@@ -21,9 +22,13 @@ public class Save extends ConsoleCollectionCommand {
 
     @Override
     public boolean execute(String[] arguments) {
-        boolean status = collectionManager.saveCollection();
-        if (status)
-            console.printSuccess("Коллекция сохранена в файл");
-        return status;
+        try {
+            collectionManager.saveCollection();
+        } catch (DumpManager.DocumentWriteException e) {
+            console.printError("Ошибка при записи в файл: " + e.getMessage());
+            return false;
+        }
+        console.printSuccess("Коллекция сохранена в файл");
+        return true;
     }
 }

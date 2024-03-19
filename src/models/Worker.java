@@ -98,6 +98,7 @@ public class Worker extends CollectionElement implements Convertable {
      *
      * @param element XML element
      * @return new Worker object
+     * @throws ElementConversionException if the element is invalid
      */
     public static Worker fromElement(Element element) throws ElementConversionException {
         try {

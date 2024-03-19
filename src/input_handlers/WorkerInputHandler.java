@@ -35,7 +35,7 @@ public class WorkerInputHandler {
             });
             Person person = inputPerson(console);
             Position position = EnumInputHandler.input(console, Position.class, false, "position");
-            Status status = EnumInputHandler.input(console, Status.class, false, "status");
+            Status status = EnumInputHandler.input(console, Status.class, true, "status");
             return new Worker(0, name, coordinates, salary, endDate, position, status, person);
         } catch (EnumInputException | NumberInputException | NumberValidationException e) {
             throw new WorkerInputException(e.getMessage());

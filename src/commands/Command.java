@@ -57,14 +57,38 @@ public abstract class Command implements Describable, Executable {
     }
 
     /**
+     * Read an id argument.
+     *
+     * @param argument argument
+     * @param console  console
+     * @return id or null if the argument is invalid
+     */
+    public Integer readIdArg(String argument, Console console) {
+        int id;
+        try {
+            id = Integer.parseInt(argument);
+        } catch (NumberFormatException e) {
+            printArgsError(console);
+            return null;
+        }
+        if (id < 0) {
+            console.printError("id не может быть отрицательным");
+            return null;
+        }
+        return id;
+    }
+
+    /**
      * Get the number of arguments.
+     *
+     * @return number of arguments
      */
     public int getArgsCount() {
         return argsCount;
     }
 
     /**
-     * Get the name of the command.
+     * Get the description of the command.
      */
     @Override
     public String getDescription() {
@@ -72,7 +96,7 @@ public abstract class Command implements Describable, Executable {
     }
 
     /**
-     * Get the description of the command.
+     * Get the name of the command.
      */
     public String getName() {
         return name;
@@ -80,6 +104,8 @@ public abstract class Command implements Describable, Executable {
 
     /**
      * Get the format of the command.
+     *
+     * @return format of the command
      */
     public String getCommandFormat() {
         return commandFormat;
@@ -143,7 +169,7 @@ public abstract class Command implements Describable, Executable {
      */
     public void checkArguments(String[] arguments) throws IllegalArgumentsNumber {
         if (arguments.length != getArgsCount()) {
-            throw new IllegalArgumentsNumber("Неверное количество аргументов. Ожидается аргументов: " + getArgsCount());
+            throw new IllegalArgumentsNumber("Неверное количество аргументов. Ожидается аргументов: " + (getArgsCount() - 1));
         }
     }
 
@@ -151,6 +177,11 @@ public abstract class Command implements Describable, Executable {
      * Exception for illegal number of arguments.
      */
     public static class IllegalArgumentsNumber extends Exception {
+        /**
+         * Constructor for the exception.
+         *
+         * @param message message
+         */
         public IllegalArgumentsNumber(String message) {
             super(message);
         }

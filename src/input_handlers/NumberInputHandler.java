@@ -42,10 +42,11 @@ public final class NumberInputHandler {
                     return null;
                 }
             }
+
             try {
                 T number = getNumber(numberClass, input);
-
                 var isValid = true;
+
                 if (checker != null) {
                     isValid = checker.check(number);
                 }
@@ -66,8 +67,8 @@ public final class NumberInputHandler {
                 }
             }
         }
-
     }
+
 
     /**
      * Converts a string to a number.
@@ -94,12 +95,34 @@ public final class NumberInputHandler {
         return number;
     }
 
+    /**
+     * Asks the user for a numeric value.
+     *
+     * @param <T>         number type
+     * @param console     console
+     * @param numberClass number class
+     * @param prompt      prompt
+     * @return number
+     * @throws NumberInputException      if number conversion was unsuccessful, in file console mode
+     * @throws NumberValidationException if input was unsuccessful or invalid, in file console mode
+     */
     public static <T extends Number> T input(Console console, Class<T> numberClass, String prompt)
             throws NumberInputException, NumberValidationException {
         return input(console, numberClass, prompt, true, null);
     }
 
+    /**
+     * Number checker interface.
+     *
+     * @param <T> number type
+     */
     public interface NumberChecker<T extends Number> {
+        /**
+         * Check if the number is valid.
+         *
+         * @param number number
+         * @return true if the number is valid, false otherwise
+         */
         boolean check(T number);
     }
 
@@ -114,6 +137,9 @@ public final class NumberInputHandler {
         }
     }
 
+    /**
+     * Exception for number validation, thrown when input is unsuccessful or invalid.
+     */
     public static class NumberValidationException extends Exception {
         NumberValidationException(String message) {
             super(message);

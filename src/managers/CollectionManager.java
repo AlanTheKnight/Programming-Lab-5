@@ -33,12 +33,19 @@ public class CollectionManager {
      */
     private LocalDateTime lastInitTime = null;
 
+    /**
+     * Creates a new CollectionManager.
+     *
+     * @param dumpManager the DumpManager used for reading and writing the collection
+     */
     public CollectionManager(DumpManager dumpManager) {
         this.dumpManager = dumpManager;
     }
 
     /**
      * Returns the last initialization time.
+     *
+     * @return the last initialization time
      */
     public LocalDateTime getLastInitTime() {
         return lastInitTime;
@@ -46,14 +53,19 @@ public class CollectionManager {
 
     /**
      * Loads the collection from the file.
+     *
+     * @throws IllegalArgumentException          if the path to the file is not specified
+     * @throws DumpManager.DocumentReadException if the collection could not be read
      */
-    public void loadCollection() {
+    public void loadCollection() throws IllegalArgumentException, DumpManager.DocumentReadException {
         workers = dumpManager.readCollection();
         lastInitTime = LocalDateTime.now();
     }
 
     /**
      * Returns the collection of workers.
+     *
+     * @return the collection of workers
      */
     public Map<Integer, Worker> getWorkers() {
         return workers;
@@ -72,9 +84,11 @@ public class CollectionManager {
 
     /**
      * Saves the collection to the file.
+     *
+     * @throws DumpManager.DocumentWriteException if the collection could not be saved
      */
-    public boolean saveCollection() {
-        return dumpManager.writeDocument(workers.values());
+    public void saveCollection() throws DumpManager.DocumentWriteException {
+        dumpManager.writeDocument(workers.values());
     }
 
     /**
@@ -96,6 +110,8 @@ public class CollectionManager {
 
     /**
      * Returns the collection as a collection of workers.
+     *
+     * @return the collection of workers
      */
     public Collection<Worker> getCollection() {
         return workers.values();

@@ -12,9 +12,22 @@ import utils.Validatable;
  * @author AlanTheKnight
  */
 public class Coordinates implements Validatable, Convertable {
+    /**
+     * X coordinate (not null).
+     */
     private final int x;
+
+    /**
+     * Y coordinate (not null, greater than -154).
+     */
     private final Float y;
 
+    /**
+     * Creates a new Coordinates object.
+     *
+     * @param x x
+     * @param y y
+     */
     public Coordinates(int x, Float y) {
         this.x = x;
         this.y = y;

@@ -23,16 +23,12 @@ public class RemoveGreaterKey extends ConsoleCollectionCommand {
 
     @Override
     public boolean execute(String[] arguments) {
-        int key;
-
-        try {
-            key = Integer.parseInt(arguments[1]);
-        } catch (NumberFormatException e) {
-            printArgsError(console);
+        Integer id = readIdArg(arguments[1], console);
+        if (id == null) {
             return false;
         }
 
-        int removed = collectionManager.removeGreaterKey(key);
+        int removed = collectionManager.removeGreaterKey(id);
 
         console.printSuccess("Удалено " + removed + " элементов");
 

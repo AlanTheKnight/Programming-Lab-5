@@ -9,5 +9,11 @@ import org.w3c.dom.Element;
  * @author AlanTheKnight
  */
 public interface Convertable {
+    /**
+     * Converts the object to XML element.
+     *
+     * @param document the document
+     * @return the XML element
+     */
     Element getElement(Document document);
 }

@@ -34,6 +34,14 @@ public class Person implements Validatable, Convertable {
      */
     private final Country nationality;
 
+    /**
+     * Creates a new person.
+     *
+     * @param height      height
+     * @param weight      weight
+     * @param hairColor   hair color
+     * @param nationality nationality
+     */
     public Person(double height, long weight, Color hairColor, Country nationality) {
         this.height = height;
         this.weight = weight;
@@ -46,6 +54,7 @@ public class Person implements Validatable, Convertable {
      *
      * @param element XML element
      * @return new Person object
+     * @throws ElementConversionException if the element is invalid
      */
     public static Person fromElement(Element element) throws ElementConversionException {
         try {

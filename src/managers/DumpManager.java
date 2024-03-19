@@ -5,6 +5,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import utils.Console;
 import utils.ElementConversionException;
@@ -54,24 +55,19 @@ public class DumpManager {
      * Reads the collection from the file.
      *
      * @return the collection of workers
+     * @throws IllegalArgumentException if the path to the file is not specified
+     * @throws DocumentReadException    if the collection could not be read
      */
-    public TreeMap<Integer, Worker> readCollection() {
+    public TreeMap<Integer, Worker> readCollection() throws IllegalArgumentException, DocumentReadException {
         if (filename == null || filename.isEmpty()) {
-            console.printError("Не указан путь к файлу данных.");
+            throw new IllegalArgumentException("Не указан путь к файлу данных.");
         }
 
         TreeMap<Integer, Worker> workers = new TreeMap<>();
 
         try {
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
-            assert filename != null;
-            FileInputStream fileInputStream = new FileInputStream(filename);
-            InputStreamReader reader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
-
-            Document document = documentBuilder.parse(fileInputStream);
+            Document document = parseDocument(filename);
             document.getDocumentElement().normalize();
-
             NodeList nodeList = document.getChildNodes().item(0).getChildNodes();
 
             for (int i = 0; i < nodeList.getLength(); i++) {
@@ -79,30 +75,64 @@ public class DumpManager {
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    Worker worker;
-                    try {
-                        worker = Worker.fromElement(element);
-                    } catch (ElementConversionException e) {
-                        console.printError("Ошибка чтения из файла: " + e.getMessage());
-                        continue;
-                    }
-                    if (worker.validate()) {
-                        workers.put(worker.getId(), worker);
-                    } else {
-                        console.printError("Ошибка чтения из файла: Объект с id " + worker.getId()
-                                + " не прошел валидацию");
-                    }
+                    Worker worker = createWorkerFromElement(element);
+                    validateWorker(worker);
+                    workers.put(worker.getId(), worker);
                 }
             }
 
-            reader.close();
-            fileInputStream.close();
-
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            console.printError("Не удалось прочитать коллекцию из файла.");
+        } catch (DocumentReadException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DocumentReadException("Ошибка при чтении XML: " + e.getMessage());
         }
 
         return workers;
+    }
+
+    /**
+     * Parses the document from the file.
+     *
+     * @param filename filename
+     * @return the document
+     * @throws DocumentReadException if the document could not be parsed
+     */
+    private Document parseDocument(String filename) throws DocumentReadException {
+        try (FileInputStream fileInputStream = new FileInputStream(filename);
+             InputStreamReader reader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8)) {
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            return documentBuilder.parse(new InputSource(reader));
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new DocumentReadException("Ошибка при чтении XML: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Creates a worker from XML element.
+     *
+     * @param element XML element
+     * @return the worker
+     * @throws DocumentReadException if the worker could not be created
+     */
+    private Worker createWorkerFromElement(Element element) throws DocumentReadException {
+        try {
+            return Worker.fromElement(element);
+        } catch (ElementConversionException e) {
+            throw new DocumentReadException(
+                    "Ошибка чтения из файла (элемент " + element.getTagName() + "): " + e.getMessage());
+        }
+    }
+
+    /**
+     * Validates the worker.
+     *
+     * @param worker the worker
+     * @throws DocumentReadException if the worker is not valid
+     */
+    private void validateWorker(Worker worker) throws DocumentReadException {
+        if (!worker.validate()) {
+            throw new DocumentReadException("Ошибка чтения из файла: Объект с id " + worker.getId() + " не прошел валидацию");
+        }
     }
 
     /**
@@ -131,19 +161,20 @@ public class DumpManager {
      * Writes the collection to the file.
      *
      * @param workers the collection of workers
-     * @return true if the collection was written successfully, false otherwise
+     * @throws DocumentWriteException if the collection could not be written
+     * @throws IllegalArgumentException if the path to the file is not specified
      */
-    public boolean writeDocument(Collection<Worker> workers) {
+    public void writeDocument(Collection<Worker> workers) throws DocumentWriteException, IllegalArgumentException {
         if (filename == null || filename.isEmpty()) {
-            console.printError("Не указан путь к файлу данных.");
-            return false;
+            throw new IllegalArgumentException("Не указан путь к файлу данных.");
         }
 
-        try {
-            Document document = generateDocument(workers);
-            FileOutputStream fileOutputStream = new FileOutputStream(filename);
-            Writer writer = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+        try (
+                FileOutputStream fileOutputStream = new FileOutputStream(filename);
+                Writer writer = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8)
+        ) {
 
+            Document document = generateDocument(workers);
             document.getDocumentElement().normalize();
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -154,12 +185,36 @@ public class DumpManager {
 
             transformer.transform(source, result);
 
-            writer.close();
-
         } catch (ParserConfigurationException | TransformerException | IOException e) {
-            console.printError("Не удалось записать коллекцию в файл.");
-            return false;
+            throw new DocumentWriteException("Ошибка при записи XML: " + e.getMessage());
         }
-        return true;
+    }
+
+    /**
+     * The exception thrown when an error occurs while reading the collection from the file.
+     */
+    public static class DocumentReadException extends Exception {
+        /**
+         * Creates a new DocumentReadException.
+         *
+         * @param message message
+         */
+        public DocumentReadException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * The exception thrown when an error occurs while writing the collection to the file.
+     */
+    public static class DocumentWriteException extends Exception {
+        /**
+         * Creates a new DocumentWriteException.
+         *
+         * @param message message
+         */
+        public DocumentWriteException(String message) {
+            super(message);
+        }
     }
 }

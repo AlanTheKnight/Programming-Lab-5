@@ -66,22 +66,15 @@ public final class EnumInputHandler {
     /**
      * Exception for enum input handler, thrown when input is unsuccessful, in file
      * console mode.
-     *
-     * @author AlanTheKnight
      */
     public static class EnumInputException extends Exception {
         /**
-         * Exception message
+         * Create a new EnumInputException.
+         *
+         * @param message message
          */
-        private final String message;
-
         public EnumInputException(String message) {
-            this.message = message;
-        }
-
-        @Override
-        public String getMessage() {
-            return message;
+            super(message);
         }
     }
 }
