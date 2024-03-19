@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.CollectionElement;
 import utils.Convertable;
+import utils.ElementConversionException;
 
 import java.time.LocalDate;
 
@@ -12,49 +13,41 @@ import java.time.LocalDate;
  */
 public class Worker extends CollectionElement implements Convertable {
     /**
-     * Worker's id (unique for each worker, generated automatically)
-     */
-    private int id;
-
-    /**
      * Name of the worker (not null).
      */
     private final String name;
-
     /**
      * Coordinates of the worker (not null).
      */
     private final Coordinates coordinates;
-
-    /**
-     * Creation date of the worker record (generated automatically).
-     */
-    private LocalDate creationDate;
-
     /**
      * Salary of the worker (not null, greater than 0).
      */
     private final Long salary;
-
     /**
      * End date of the worker's contract (not null).
      */
     private final LocalDate endDate;
-
     /**
      * Position of the worker (can be null).
      */
     private final Position position;
-
     /**
      * Status of the worker (not null).
      */
     private final Status status;
-
     /**
      * Personal data of the worker (not null).
      */
     private final Person person;
+    /**
+     * Worker's id (unique for each worker, generated automatically)
+     */
+    private int id;
+    /**
+     * Creation date of the worker record (generated automatically).
+     */
+    private LocalDate creationDate;
 
     /**
      * Creates a new worker.
@@ -106,19 +99,23 @@ public class Worker extends CollectionElement implements Convertable {
      * @param element XML element
      * @return new Worker object
      */
-    public static Worker fromElement(Element element) {
-        int id = Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent());
-        String name = element.getElementsByTagName("name").item(0).getTextContent();
-        Coordinates coordinates = Coordinates
-                .fromElement((Element) element.getElementsByTagName("coordinates").item(0));
-        LocalDate creationDate = LocalDate.parse(element.getElementsByTagName("creationDate").item(0).getTextContent());
-        Long salary = Long.parseLong(element.getElementsByTagName("salary").item(0).getTextContent());
-        LocalDate endDate = LocalDate.parse(element.getElementsByTagName("endDate").item(0).getTextContent());
-        Position position = Position.valueOf(element.getElementsByTagName("position").item(0).getTextContent());
-        Status status = Status.valueOf(element.getElementsByTagName("status").item(0).getTextContent());
-        Person person = Person.fromElement((Element) element.getElementsByTagName("person").item(0));
+    public static Worker fromElement(Element element) throws ElementConversionException {
+        try {
+            int id = Integer.parseInt(element.getElementsByTagName("id").item(0).getTextContent());
+            String name = element.getElementsByTagName("name").item(0).getTextContent();
+            Coordinates coordinates = Coordinates
+                    .fromElement((Element) element.getElementsByTagName("coordinates").item(0));
+            LocalDate creationDate = LocalDate.parse(element.getElementsByTagName("creationDate").item(0).getTextContent());
+            Long salary = Long.parseLong(element.getElementsByTagName("salary").item(0).getTextContent());
+            LocalDate endDate = LocalDate.parse(element.getElementsByTagName("endDate").item(0).getTextContent());
+            Position position = Position.valueOf(element.getElementsByTagName("position").item(0).getTextContent());
+            Status status = Status.valueOf(element.getElementsByTagName("status").item(0).getTextContent());
+            Person person = Person.fromElement((Element) element.getElementsByTagName("person").item(0));
 
-        return new Worker(id, name, coordinates, salary, creationDate, endDate, position, status, person);
+            return new Worker(id, name, coordinates, salary, creationDate, endDate, position, status, person);
+        } catch (ElementConversionException | NullPointerException e) {
+            throw new ElementConversionException(e.getMessage());
+        }
     }
 
     @Override

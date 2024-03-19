@@ -21,6 +21,11 @@ public enum ConsoleColors {
      */
     private final String ansiCode;
 
+    /**
+     * Constructor.
+     *
+     * @param ansiCode the ANSI code for the color
+     */
     ConsoleColors(String ansiCode) {
         this.ansiCode = ansiCode;
     }
@@ -34,17 +39,6 @@ public enum ConsoleColors {
      */
     public static String colorize(String text, ConsoleColors color) {
         return color + text + RESET;
-    }
-
-    /**
-     * Returns a color by its number.
-     *
-     * @param number - number of the color
-     * @return
-     */
-    public static ConsoleColors byNumber(int number) {
-        number = number % 8;
-        return ConsoleColors.valueOf(ConsoleColors.class, ConsoleColors.values()[number].name());
     }
 
     @Override

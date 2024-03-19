@@ -1,6 +1,6 @@
 package commands;
 
-import inputters.ElementInputter;
+import input_handlers.WorkerInputHandler;
 import managers.CollectionManager;
 import models.Worker;
 import utils.Console;
@@ -35,11 +35,11 @@ public class Update extends ConsoleCollectionCommand {
         }
 
         try {
-            Worker w = ElementInputter.inputWorker(console);
+            Worker w = WorkerInputHandler.inputWorker(console);
             collectionManager.insertWorker(id, w);
             console.printSuccess("Элемент обновлён");
             return true;
-        } catch (ElementInputter.ElementInputterException e) {
+        } catch (WorkerInputHandler.WorkerInputException e) {
             console.printError("Ошибка ввода");
             return false;
         }

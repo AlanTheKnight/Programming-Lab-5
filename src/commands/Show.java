@@ -3,7 +3,6 @@ package commands;
 import managers.CollectionManager;
 import models.Worker;
 import utils.Console;
-import utils.ConsoleColors;
 
 /**
  * Command for printing all elements of the collection to the standard
@@ -31,7 +30,7 @@ public class Show extends ConsoleCollectionCommand {
     @Override
     public boolean execute(String[] arguments) {
         for (Worker w : collectionManager.getWorkers().values()) {
-            console.printInColor(ConsoleColors.byNumber(w.hashCode()), w.toString());
+            console.println(w.toString());
         }
         return true;
     }

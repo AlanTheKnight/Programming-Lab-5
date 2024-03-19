@@ -44,7 +44,7 @@ public class CommandManager {
     }
 
     /**
-     * Get command by it's name
+     * Get command by its name
      */
     public Command getCommand(String name) {
         return commands.get(name);

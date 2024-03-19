@@ -1,12 +1,9 @@
 package managers;
 
 import models.Worker;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -18,27 +15,26 @@ import java.util.TreeMap;
  * @author AlanTheKnight
  */
 public class CollectionManager {
+    /**
+     * The DumpManager used for reading and writing the collection.
+     */
     private final DumpManager dumpManager;
+
+    /**
+     * The collection of workers.
+     */
     private Map<Integer, Worker> workers = new TreeMap<>();
+    /**
+     * The next free id.
+     */
     private Integer freeId = 0;
+    /**
+     * The last initialization time.
+     */
     private LocalDateTime lastInitTime = null;
 
     public CollectionManager(DumpManager dumpManager) {
         this.dumpManager = dumpManager;
-    }
-
-    /**
-     * Returns the collection as a list of XML elements.
-     *
-     * @param document XML document.
-     * @return List of XML elements.
-     */
-    public ArrayList<Element> getElements(Document document) {
-        ArrayList<Element> elements = new ArrayList<>();
-        for (Worker worker : workers.values()) {
-            elements.add(worker.getElement(document));
-        }
-        return elements;
     }
 
     /**
@@ -68,19 +64,10 @@ public class CollectionManager {
      *
      * @param id     Worker id.
      * @param worker Worker to add.
-     * @return Added worker.
      */
-    public Worker insertWorker(int id, Worker worker) {
+    public void insertWorker(int id, Worker worker) {
         workers.put(id, worker);
         freeId = Math.max(freeId, id + 1);
-        return worker;
-    }
-
-    /**
-     * Returns the next free id.
-     */
-    public Integer getFreeId() {
-        return freeId;
     }
 
     /**

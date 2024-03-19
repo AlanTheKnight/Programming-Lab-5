@@ -3,7 +3,6 @@ package commands;
 import managers.CollectionManager;
 import models.Worker;
 import utils.Console;
-import utils.ConsoleColors;
 
 import java.time.LocalDate;
 
@@ -38,7 +37,7 @@ public class FilterByEndDate extends ConsoleCollectionCommand {
 
         for (Worker w : collectionManager.getWorkers().values()) {
             if (w.getEndDate().equals(date)) {
-                console.printInColor(ConsoleColors.byNumber(w.hashCode()), w.toString());
+                console.println(w.toString());
                 count++;
             }
         }

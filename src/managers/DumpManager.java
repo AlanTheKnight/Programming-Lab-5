@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import utils.Console;
+import utils.ElementConversionException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,6 +18,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.TreeMap;
 
@@ -27,9 +29,22 @@ import java.util.TreeMap;
  * @author AlanTheKnight
  */
 public class DumpManager {
+    /**
+     * The path to the file used for reading and writing the collection.
+     */
     private final String filename;
+
+    /**
+     * The console used for printing errors.
+     */
     private final Console console;
 
+    /**
+     * Creates a new DumpManager.
+     *
+     * @param filename the path to the file used for reading and writing the collection
+     * @param console  the console
+     */
     public DumpManager(String filename, Console console) {
         this.filename = filename;
         this.console = console;
@@ -50,8 +65,9 @@ public class DumpManager {
         try {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
+            assert filename != null;
             FileInputStream fileInputStream = new FileInputStream(filename);
-            InputStreamReader reader = new InputStreamReader(fileInputStream, "UTF-8");
+            InputStreamReader reader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
 
             Document document = documentBuilder.parse(fileInputStream);
             document.getDocumentElement().normalize();
@@ -63,12 +79,19 @@ public class DumpManager {
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    Worker worker = Worker.fromElement(element);
-                    if (worker.validate())
+                    Worker worker;
+                    try {
+                        worker = Worker.fromElement(element);
+                    } catch (ElementConversionException e) {
+                        console.printError("Ошибка чтения из файла: " + e.getMessage());
+                        continue;
+                    }
+                    if (worker.validate()) {
                         workers.put(worker.getId(), worker);
-                    else
-                        console.printError("Объект с id " + worker.getId()
+                    } else {
+                        console.printError("Ошибка чтения из файла: Объект с id " + worker.getId()
                                 + " не прошел валидацию");
+                    }
                 }
             }
 
@@ -82,6 +105,13 @@ public class DumpManager {
         return workers;
     }
 
+    /**
+     * Generates a document from the collection.
+     *
+     * @param workers the collection of workers
+     * @return the document
+     * @throws ParserConfigurationException if the document builder could not be created
+     */
     public Document generateDocument(Collection<Worker> workers) throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -112,7 +142,7 @@ public class DumpManager {
         try {
             Document document = generateDocument(workers);
             FileOutputStream fileOutputStream = new FileOutputStream(filename);
-            Writer writer = new OutputStreamWriter(fileOutputStream, "UTF-8");
+            Writer writer = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
 
             document.getDocumentElement().normalize();
 

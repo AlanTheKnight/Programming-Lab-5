@@ -1,6 +1,6 @@
 package commands;
 
-import inputters.ElementInputter;
+import input_handlers.WorkerInputHandler;
 import managers.CollectionManager;
 import models.Worker;
 import utils.Console;
@@ -36,12 +36,12 @@ public class Insert extends ConsoleCollectionCommand {
         }
 
         try {
-            Worker w = ElementInputter.inputWorker(console);
+            Worker w = WorkerInputHandler.inputWorker(console);
             collectionManager.insertWorker(id, w);
-            console.printSuccess("Элемент добавлен");
+            console.printSuccess("Элемент с id " + id + " успешно добавлен");
             return true;
-        } catch (ElementInputter.ElementInputterException e) {
-            console.printError("Ошибка ввода");
+        } catch (WorkerInputHandler.WorkerInputException e) {
+            console.printError("Ошибка ввода: " + e.getMessage());
             return false;
         }
     }

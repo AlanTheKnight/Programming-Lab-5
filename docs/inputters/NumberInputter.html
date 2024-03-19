@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="dc.created" content="2024-03-19">
-<meta name="description" content="declaration: package: inputters, class: NumberInputter">
+<meta name="description" content="declaration: package: input_handlers, class: NumberInputter">
 <meta name="generator" content="javadoc/ClassWriterImpl">
 <link rel="stylesheet" type="text/css" href="../stylesheet.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../script-dir/jquery-ui.min.css" title="Style">
@@ -68,11 +68,11 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">inputters</a></div>
+<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">input_handlers</a></div>
 <h1 title="Class NumberInputter" class="title">Class NumberInputter</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">inputters.NumberInputter</div>
+<div class="inheritance">input_handlers.NumberInputHandler</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
@@ -92,10 +92,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="NumberInputter.NumberChecker.html" class="type-name-link" title="interface in inputters">NumberInputter.NumberChecker</a>&lt;<a href="NumberInputter.NumberChecker.html" title="type parameter in NumberInputter.NumberChecker">T</a> extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="NumberInputter.NumberChecker.html" class="type-name-link" title="interface in input_handlers">NumberInputter.NumberChecker</a>&lt;<a href="NumberInputter.NumberChecker.html" title="type parameter in NumberInputter.NumberChecker">T</a> extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a>&gt;</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="NumberInputter.NumberInputterException.html" class="type-name-link" title="class in inputters">NumberInputter.NumberInputterException</a></code></div>
+<div class="col-second odd-row-color"><code><a href="NumberInputter.NumberInputterException.html" class="type-name-link" title="class in input_handlers">NumberInputter.NumberInputterException</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
@@ -134,7 +134,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;numberClass,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prompt,
  boolean&nbsp;isRequired,
- <a href="NumberInputter.NumberChecker.html" title="interface in inputters">NumberInputter.NumberChecker</a>&lt;T&gt;&nbsp;checker)</code></div>
+ <a href="NumberInputter.NumberChecker.html" title="interface in input_handlers">NumberInputter.NumberChecker</a>&lt;T&gt;&nbsp;checker)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Asks the user for a numeric value.</div>
 </div>
@@ -176,8 +176,8 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;numberClass,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prompt,
  boolean&nbsp;isRequired,
- <a href="NumberInputter.NumberChecker.html" title="interface in inputters">NumberInputter.NumberChecker</a>&lt;T&gt;&nbsp;checker)</span>
-                                  throws <span class="exceptions"><a href="NumberInputter.NumberInputterException.html" title="class in inputters">NumberInputter.NumberInputterException</a></span></div>
+ <a href="NumberInputter.NumberChecker.html" title="interface in input_handlers">NumberInputter.NumberChecker</a>&lt;T&gt;&nbsp;checker)</span>
+                                  throws <span class="exceptions"><a href="NumberInputter.NumberInputterException.html" title="class in input_handlers">NumberInputter.NumberInputterException</a></span></div>
 <div class="block">Asks the user for a numeric value.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
@@ -191,7 +191,7 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>number</dd>
 <dt>Throws:</dt>
-<dd><code><a href="NumberInputter.NumberInputterException.html" title="class in inputters">NumberInputter.NumberInputterException</a></code></dd>
+<dd><code><a href="NumberInputter.NumberInputterException.html" title="class in input_handlers">NumberInputter.NumberInputterException</a></code></dd>
 </dl>
 </section>
 </li>
@@ -201,10 +201,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a>&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">input</span><wbr><span class="parameters">(<a href="../utils/Console.html" title="interface in utils">Console</a>&nbsp;console,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;numberClass,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prompt)</span>
-                                  throws <span class="exceptions"><a href="NumberInputter.NumberInputterException.html" title="class in inputters">NumberInputter.NumberInputterException</a></span></div>
+                                  throws <span class="exceptions"><a href="NumberInputter.NumberInputterException.html" title="class in input_handlers">NumberInputter.NumberInputterException</a></span></div>
 <dl class="notes">
 <dt>Throws:</dt>
-<dd><code><a href="NumberInputter.NumberInputterException.html" title="class in inputters">NumberInputter.NumberInputterException</a></code></dd>
+<dd><code><a href="NumberInputter.NumberInputterException.html" title="class in input_handlers">NumberInputter.NumberInputterException</a></code></dd>
 </dl>
 </section>
 </li>

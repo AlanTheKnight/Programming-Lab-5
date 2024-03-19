@@ -1,6 +1,6 @@
 package commands;
 
-import inputters.ElementInputter;
+import input_handlers.WorkerInputHandler;
 import managers.CollectionManager;
 import models.Worker;
 import utils.Console;
@@ -27,8 +27,8 @@ public class RemoveGreater extends ConsoleCollectionCommand {
     public boolean execute(String[] arguments) {
         Worker w;
         try {
-            w = ElementInputter.inputWorker(console);
-        } catch (ElementInputter.ElementInputterException e) {
+            w = WorkerInputHandler.inputWorker(console);
+        } catch (WorkerInputHandler.WorkerInputException e) {
             console.printError("Ошибка ввода");
             return false;
         }

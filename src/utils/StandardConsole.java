@@ -3,11 +3,11 @@ package utils;
 import java.util.Scanner;
 
 /**
- * Standart console.
+ * Standard console.
  *
  * @author AlanTheKnight
  */
-public class StandartConsole implements Console {
+public class StandardConsole implements Console {
     /**
      * The prompt entry
      */

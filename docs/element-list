@@ -1,6 +1,6 @@
 unnamed package
 commands
-inputters
+input_handlers
 managers
 models
 utils

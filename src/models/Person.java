@@ -3,6 +3,7 @@ package models;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Convertable;
+import utils.ElementConversionException;
 import utils.Validatable;
 
 import java.util.Objects;
@@ -46,18 +47,22 @@ public class Person implements Validatable, Convertable {
      * @param element XML element
      * @return new Person object
      */
-    public static Person fromElement(Element element) {
-        String heightValue = element.getElementsByTagName("height").item(0).getTextContent();
-        String weightValue = element.getElementsByTagName("weight").item(0).getTextContent();
-        String hairColorValue = element.getElementsByTagName("hairColor").item(0).getTextContent();
-        String nationalityValue = element.getElementsByTagName("nationality").item(0).getTextContent();
+    public static Person fromElement(Element element) throws ElementConversionException {
+        try {
+            String heightValue = element.getElementsByTagName("height").item(0).getTextContent();
+            String weightValue = element.getElementsByTagName("weight").item(0).getTextContent();
+            String hairColorValue = element.getElementsByTagName("hairColor").item(0).getTextContent();
+            String nationalityValue = element.getElementsByTagName("nationality").item(0).getTextContent();
 
-        double height = Double.parseDouble(heightValue);
-        long weight = Long.parseLong(weightValue);
-        Color hairColor = hairColorValue.equals("null") ? null : Color.valueOf(hairColorValue);
-        Country nationality = nationalityValue.equals("null") ? null : Country.valueOf(nationalityValue);
+            double height = Double.parseDouble(heightValue);
+            long weight = Long.parseLong(weightValue);
+            Color hairColor = hairColorValue.equals("null") ? null : Color.valueOf(hairColorValue);
+            Country nationality = nationalityValue.equals("null") ? null : Country.valueOf(nationalityValue);
 
-        return new Person(height, weight, hairColor, nationality);
+            return new Person(height, weight, hairColor, nationality);
+        } catch (NullPointerException | IllegalArgumentException e) {
+            throw new ElementConversionException(e.getMessage());
+        }
     }
 
     @Override

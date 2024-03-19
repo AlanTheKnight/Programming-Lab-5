@@ -38,7 +38,7 @@ public abstract class Command implements Describable, Executable {
         this.name = name;
         this.description = description;
         this.commandFormat = commandFormat;
-        this.argsCount = commandFormat.split(" ").length - 1;
+        this.argsCount = commandFormat.split(" ").length;
     }
 
     /**

@@ -1,14 +1,14 @@
-package inputters;
+package input_handlers;
 
 import utils.Console;
 import utils.EnumHelper;
 
 /**
- * Inputter for enum values.
+ * Input handler for enum values.
  *
  * @author AlanTheKnight
  */
-public final class EnumInputter {
+public final class EnumInputHandler {
     /**
      * Asks the user for an enum value.
      *
@@ -18,10 +18,10 @@ public final class EnumInputter {
      * @param isRequired whether the value is required
      * @param prompt     prompt
      * @return enum value
-     * @throws EnumInputterException if input was unsuccessful, in file console mode
+     * @throws EnumInputException if input was unsuccessful, in file console mode
      */
     public static <T extends Enum<T>> T input(Console console, Class<T> enumClass, boolean isRequired, String prompt)
-            throws EnumInputterException {
+            throws EnumInputException {
         while (true) {
             if (console.isInteractive())
                 console.println("Выберите одно из значений: " + EnumHelper.enumToString(enumClass));
@@ -30,7 +30,7 @@ public final class EnumInputter {
                 if (isRequired) {
                     console.printError("Поле не может быть пустым");
                     if (!console.isInteractive())
-                        throw new EnumInputterException("Поле " + prompt + " не может быть пустым");
+                        throw new EnumInputException("Поле " + prompt + " не может быть пустым");
                     continue;
                 } else {
                     return null;
@@ -39,11 +39,11 @@ public final class EnumInputter {
             try {
                 return Enum.valueOf(enumClass, input);
             } catch (IllegalArgumentException e) {
-                console.printError(
-                        "Значение должно быть одним из перечисленных: " + EnumHelper.enumToString(enumClass));
+                String msg = "Значение поля " + prompt + " должно быть одним из: " + EnumHelper.enumToString(enumClass) + ". Полученное значение: " + input;
                 if (!console.isInteractive())
-                    throw new EnumInputterException(
-                            "Введенное в поле " + prompt + " значение не соответствует доступным вариантам");
+                    throw new EnumInputException(msg);
+                else
+                    console.printError(msg);
             }
         }
     }
@@ -56,26 +56,26 @@ public final class EnumInputter {
      * @param enumClass enum class
      * @param prompt    prompt
      * @return enum value
-     * @throws EnumInputterException if input was unsuccessful, in file console mode
+     * @throws EnumInputException if input was unsuccessful, in file console mode
      */
     public static <T extends Enum<T>> T input(Console console, Class<T> enumClass, String prompt)
-            throws EnumInputterException {
+            throws EnumInputException {
         return input(console, enumClass, true, prompt);
     }
 
     /**
-     * Exception for enum inputter, thrown when input is unsuccessful, in file
+     * Exception for enum input handler, thrown when input is unsuccessful, in file
      * console mode.
      *
      * @author AlanTheKnight
      */
-    public static class EnumInputterException extends Exception {
+    public static class EnumInputException extends Exception {
         /**
          * Exception message
          */
         private final String message;
 
-        public EnumInputterException(String message) {
+        public EnumInputException(String message) {
             this.message = message;
         }
 

@@ -53,9 +53,15 @@ public class CommandRunner {
         if (readCommand[0].isEmpty())
             return ExitCode.OK;
 
+        if (readCommand[0].startsWith("//") || readCommand[0].startsWith("#"))
+            return ExitCode.OK;
+
         if (readCommand[0].equals("execute_script")) {
-            if (readCommand.length == 1) {
-                console.printError("Не указан файл для выполнения. Используйте команду help для получения справки.");
+            if (readCommand.length != 2) {
+                if (readCommand.length == 1)
+                    console.printError("Не указан файл для выполнения. Используйте команду help для получения справки.");
+                else
+                    console.printError("Неверное количество аргументов");
                 return ExitCode.ERROR;
             }
 
@@ -68,10 +74,6 @@ public class CommandRunner {
                 return ExitCode.ERROR;
             }
 
-            if (readCommand.length != 2) {
-                console.printError("Неверное количество аргументов");
-                return ExitCode.ERROR;
-            }
             commandManager.addToHistory(prompt);
             return executeScript(readCommand[1]);
         } else {
@@ -92,7 +94,7 @@ public class CommandRunner {
      */
     public void run() {
         try {
-            ExitCode commandStatus = ExitCode.OK;
+            ExitCode commandStatus;
             do {
                 commandStatus = processPrompt(console.readLine());
             } while (commandStatus != ExitCode.EXIT);
@@ -109,12 +111,12 @@ public class CommandRunner {
      */
     public ExitCode executeScript(String filename) {
         if (!new File(filename).exists()) {
-            console.printError("Файл не найден");
+            console.printError("Файл скрипта " + filename + " не найден");
             return ExitCode.ERROR;
         }
 
         if (!Files.isReadable(Paths.get(filename))) {
-            console.printError("Файл не доступен для чтения");
+            console.printError("Файл скрипта " + filename + " не доступен для чтения");
             return ExitCode.ERROR;
         }
 
@@ -123,12 +125,21 @@ public class CommandRunner {
             var commandStatus = ExitCode.OK;
             do {
                 commandStatus = processPrompt(scanner.nextLine());
+                if (commandStatus == ExitCode.ERROR) {
+                    console.printError("Ошибка при выполнении скрипта " + filename);
+                    console.selectFileScanner(null);
+                    return ExitCode.ERROR;
+                }
             } while (commandStatus == ExitCode.OK && scanner.hasNextLine());
-            console.selectFileScanner(null);
         } catch (Exception e) {
             console.printError(e.getMessage());
+            console.printError("Ошибка при выполнении скрипта " + filename);
             return ExitCode.ERROR;
         }
+
+        console.selectFileScanner(null);
+        recursionLevel--;
+        console.printSuccess("Выполнение скрипта " + filename + " завершено");
 
         return ExitCode.OK;
     }

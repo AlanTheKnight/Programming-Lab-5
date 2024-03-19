@@ -2,11 +2,11 @@ import commands.*;
 import managers.CollectionManager;
 import managers.CommandManager;
 import managers.DumpManager;
-import utils.StandartConsole;
+import utils.StandardConsole;
 
 public class Main {
     public static void main(String[] args) {
-        var console = new StandartConsole();
+        var console = new StandardConsole();
 
         if (args.length == 0) {
             console.printError("Не указан файл с данными.");

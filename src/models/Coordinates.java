@@ -3,6 +3,7 @@ package models;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utils.Convertable;
+import utils.ElementConversionException;
 import utils.Validatable;
 
 /**
@@ -19,23 +20,21 @@ public class Coordinates implements Validatable, Convertable {
         this.y = y;
     }
 
-    public Coordinates(String coords) {
-        String[] parts = coords.split(";");
-        this.x = Integer.parseInt(parts[0]);
-        this.y = Float.parseFloat(parts[1]);
-    }
-
     /**
      * Creates a new Coordinates object from the given XML element.
      *
      * @param element XML element
      * @return new Coordinates object
+     * @throws ElementConversionException if the element is invalid
      */
-    public static Coordinates fromElement(Element element) {
-        int x = Integer.parseInt(element.getElementsByTagName("x").item(0).getTextContent());
-        Float y = Float.parseFloat(element.getElementsByTagName("y").item(0).getTextContent());
-
-        return new Coordinates(x, y);
+    public static Coordinates fromElement(Element element) throws ElementConversionException {
+        try {
+            int x = Integer.parseInt(element.getElementsByTagName("x").item(0).getTextContent());
+            Float y = Float.parseFloat(element.getElementsByTagName("y").item(0).getTextContent());
+            return new Coordinates(x, y);
+        } catch (NullPointerException e) {
+            throw new ElementConversionException(e.getMessage());
+        }
     }
 
     @Override

@@ -1,7 +1,18 @@
 help
+
+# Add new employee
 insert 10
 Vasya
 100
 200
 2030-01-01
+100000
+177
+65
 
+
+DEVELOPER
+REGULAR
+
+show
+save
