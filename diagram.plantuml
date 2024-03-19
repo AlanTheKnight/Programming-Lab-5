@@ -1,0 +1,354 @@
+@startuml
+
+top to bottom direction
+skinparam linetype ortho
+
+package managers {
+    class CollectionManager {
+      + CollectionManager(DumpManager):
+      - lastInitTime: LocalDateTime
+      - workers: Map<Integer, Worker>
+      + loadCollection(): void
+      + clearCollection(): void
+      + removeGreaterKey(int): int
+      + insertWorker(int, Worker): void
+      + removeWorker(int): Worker
+      + removeGreaterEndDate(LocalDate): int
+      + saveCollection(): void
+      + removeWorkerByEndDate(LocalDate): Worker
+       lastInitTime: LocalDateTime
+       collection: Collection<Worker>
+       workers: Map<Integer, Worker>
+    }
+
+    class CommandManager {
+      + CommandManager():
+      - history: ArrayList<String>
+      - commands: Map<String, Command>
+      + addToHistory(String): void
+      + register(Command): void
+      + getCommand(String): Command
+       commands: Map<String, Command>
+       history: ArrayList<String>
+    }
+
+    class DumpManager {
+      + DumpManager(String, Console):
+      + readCollection(): TreeMap<Integer, Worker>
+      - parseDocument(String): Document
+      - validateWorker(Worker): void
+      + writeDocument(Collection<Worker>): void
+      - createWorkerFromElement(Element): Worker
+      + generateDocument(Collection<Worker>): Document
+    }
+
+    class DocumentReadException {
+      + DocumentReadException(String):
+    }
+
+    class DocumentWriteException {
+      + DocumentWriteException(String):
+    }
+}
+
+package commands {
+    class Command {
+      + Command(String, String, String, int):
+      + Command(String, String, String):
+      - name: String
+      - argsCount: int
+      - commandFormat: String
+      - description: String
+      + checkArguments(String[]): void
+      + hashCode(): int
+      + equals(Object): boolean
+      + run(String[], Console): boolean
+      + printArgsError(Console): void
+      + toString(): String
+      + readIdArg(String, Console): Integer
+       name: String
+       description: String
+       argsCount: int
+       commandFormat: String
+    }
+    class Clear {
+      + Clear(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class CommandRunner {
+      + CommandRunner(Console, CommandManager):
+      + run(): void
+      + processPrompt(String): ExitCode
+      + executeScript(String): ExitCode
+       maxRecursionLevel: int
+    }
+    class FilterByEndDate {
+      + FilterByEndDate(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class Help {
+      + Help(Console, CommandManager):
+      + execute(String[]): boolean
+    }
+    class History {
+      + History(Console, CommandManager):
+      + execute(String[]): boolean
+    }
+    class ConsoleCommand {
+      + ConsoleCommand(String, String, String, Console, int):
+      + ConsoleCommand(String, String, String, Console):
+    }
+    class ConsoleCmdCommand {
+      + ConsoleCmdCommand(String, String, String, Console, CommandManager):
+    }
+    class ConsoleCollectionCommand {
+      + ConsoleCollectionCommand(String, String, String, Console, CollectionManager):
+    }
+    class Info {
+      + Info(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class Insert {
+      + Insert(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class RemoveAnyByEndDate {
+      + RemoveAnyByEndDate(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class RemoveGreater {
+      + RemoveGreater(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class RemoveGreaterKey {
+      + RemoveGreaterKey(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class RemoveKey {
+      + RemoveKey(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class Save {
+      + Save(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class Show {
+      + Show(Console, CollectionManager):
+      + Show(Console, CollectionManager, String, String):
+      + execute(String[]): boolean
+    }
+    class ExecuteScript {
+      + ExecuteScript():
+      + execute(String[]): boolean
+    }
+    class Exit {
+      + Exit(Console):
+      + execute(String[]): boolean
+    }
+    class Update {
+      + Update(Console, CollectionManager):
+      + execute(String[]): boolean
+    }
+    class IllegalArgumentsNumber {
+      + IllegalArgumentsNumber(String):
+    }
+    enum ExitCode << enumeration >> {
+      + ExitCode():
+      + valueOf(String): ExitCode
+      + values(): ExitCode[]
+    }
+}
+
+
+package models {
+    enum Color << enumeration >> {
+      + Color():
+      + valueOf(String): Color
+      + values(): Color[]
+    }
+    class Coordinates {
+      + Coordinates(int, Float):
+      + validate(): boolean
+      + toString(): String
+      + getElement(Document): Element
+      + equals(Object): boolean
+      + fromElement(Element): Coordinates
+      + hashCode(): int
+    }
+    enum Country << enumeration >> {
+      + Country():
+      + values(): Country[]
+      + valueOf(String): Country
+    }
+    class Worker {
+      + Worker(int, String, Coordinates, Long, LocalDate, Position, Status, Person):
+      + Worker(int, String, Coordinates, Long, LocalDate, LocalDate, Position, Status, Person):
+      - id: int
+      - endDate: LocalDate
+      + compareTo(CollectionElement): int
+      + getElement(Document): Element
+      + validate(): boolean
+      + fromElement(Element): Worker
+      + toString(): String
+       id: Integer
+       endDate: LocalDate
+    }
+    class Person {
+      + Person(double, long, Color, Country):
+      + hashCode(): int
+      + validate(): boolean
+      + getElement(Document): Element
+      + toString(): String
+      + fromElement(Element): Person
+    }
+    enum Position << enumeration >> {
+      + Position():
+      + valueOf(String): Position
+      + values(): Position[]
+    }
+    enum Status << enumeration >> {
+      + Status():
+      + valueOf(String): Status
+      + values(): Status[]
+    }
+}
+
+package utils {
+    class CollectionElement {
+      + CollectionElement():
+       id: Integer
+    }
+    interface Convertable << interface >> {
+      + getElement(Document): Element
+    }
+    interface Describable << interface >> {
+       name: String
+       description: String
+    }
+    interface Executable << interface >> {
+      + execute(String[]): boolean
+    }
+    interface Console << interface >> {
+      + canReadLine(): boolean
+      + print(Object): void
+      + selectFileScanner(Scanner): void
+      + printSuccess(String): void
+      + printError(Object): void
+      + readLine(boolean): String
+      + printInColor(ConsoleColors, Object): void
+      + println(Object): void
+      + readLine(): String
+      + printTwoColumns(Object, Object, String, int): void
+       interactive: boolean
+    }
+    enum ConsoleColors << enumeration >> {
+      - ConsoleColors(String):
+      + valueOf(String): ConsoleColors
+      + toString(): String
+      + values(): ConsoleColors[]
+      + colorize(String, ConsoleColors): String
+    }
+    class EnumHelper {
+      + EnumHelper():
+      + enumToString(Class<T>): String
+    }
+    class StandardConsole {
+      + StandardConsole():
+      + println(Object): void
+      + printTwoColumns(Object, Object, String, int): void
+      + readLine(): String
+      + canReadLine(): boolean
+      + printError(Object): void
+      + readLine(boolean): String
+      + selectFileScanner(Scanner): void
+      + printSuccess(String): void
+      + printInColor(ConsoleColors, Object): void
+      + print(Object): void
+       interactive: boolean
+    }
+    interface Validatable << interface >> {
+      + validate(): boolean
+    }
+    class ElementConversionException {
+      + ElementConversionException(String):
+    }
+}
+
+
+package input_handlers {
+    class WorkerInputException {
+      ~ WorkerInputException(String):
+    }
+    class WorkerInputHandler {
+      + WorkerInputHandler():
+      + inputName(Console): String
+      + inputEndDate(Console): LocalDate?
+      + inputWorker(Console): Worker
+      + inputCoordinates(Console): Coordinates
+      + inputPerson(Console): Person
+    }
+    class EnumInputException {
+      + EnumInputException(String):
+    }
+    class EnumInputHandler {
+      + EnumInputHandler():
+      + input(Console, Class<T>, String): T
+      + input(Console, Class<T>, boolean, String): T?
+    }
+    interface NumberChecker<T> << interface >> {
+      + check(T): boolean
+    }
+    class NumberInputException {
+      ~ NumberInputException(String):
+    }
+    class NumberInputHandler {
+      + NumberInputHandler():
+      - getNumber(Class<T>, String): T
+      + input(Console, Class<T>, String, boolean, NumberChecker<T>): T?
+      + input(Console, Class<T>, String): T
+    }
+    class NumberValidationException {
+      ~ NumberValidationException(String):
+    }
+}
+
+
+
+Clear                       -[#000082,plain]-^  ConsoleCollectionCommand   
+CollectionElement           -[#008200,dashed]-^  Validatable                
+Command                     -[#008200,dashed]-^  Describable                
+Command                     -[#008200,dashed]-^  Executable                 
+ConsoleCmdCommand           -[#000082,plain]-^  ConsoleCommand             
+ConsoleCollectionCommand    -[#000082,plain]-^  ConsoleCommand             
+ConsoleCommand              -[#000082,plain]-^  Command                    
+Coordinates                 -[#008200,dashed]-^  Convertable                
+Coordinates                 -[#008200,dashed]-^  Validatable                
+DocumentReadException       +-[#820000,plain]-  DumpManager                
+DocumentWriteException      +-[#820000,plain]-  DumpManager                
+EnumInputException          +-[#820000,plain]-  EnumInputHandler           
+ExecuteScript               -[#000082,plain]-^  Command                    
+Exit                        -[#000082,plain]-^  ConsoleCommand             
+ExitCode                    +-[#820000,plain]-  CommandRunner              
+FilterByEndDate             -[#000082,plain]-^  ConsoleCollectionCommand   
+Help                        -[#000082,plain]-^  ConsoleCmdCommand          
+History                     -[#000082,plain]-^  ConsoleCmdCommand          
+IllegalArgumentsNumber      +-[#820000,plain]-  Command                    
+Info                        -[#000082,plain]-^  ConsoleCollectionCommand   
+Insert                      -[#000082,plain]-^  ConsoleCollectionCommand   
+NumberChecker               +-[#820000,plain]-  NumberInputHandler         
+NumberInputException        +-[#820000,plain]-  NumberInputHandler         
+NumberValidationException   +-[#820000,plain]-  NumberInputHandler         
+Person                      -[#008200,dashed]-^  Convertable                
+Person                      -[#008200,dashed]-^  Validatable                
+RemoveAnyByEndDate          -[#000082,plain]-^  ConsoleCollectionCommand   
+RemoveGreater               -[#000082,plain]-^  ConsoleCollectionCommand   
+RemoveGreaterKey            -[#000082,plain]-^  ConsoleCollectionCommand   
+RemoveKey                   -[#000082,plain]-^  ConsoleCollectionCommand   
+Save                        -[#000082,plain]-^  ConsoleCollectionCommand   
+Show                        -[#000082,plain]-^  ConsoleCollectionCommand   
+StandardConsole             -[#008200,dashed]-^  Console                    
+Update                      -[#000082,plain]-^  ConsoleCollectionCommand   
+Worker                      -[#000082,plain]-^  CollectionElement          
+Worker                      -[#008200,dashed]-^  Convertable                
+WorkerInputException        +-[#820000,plain]-  WorkerInputHandler         
+@enduml
